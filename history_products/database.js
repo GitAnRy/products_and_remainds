@@ -1,5 +1,7 @@
 const db = require(`./data-config`);
+// логику взаимодействия с базой данных выносим в отдельный файл 
 
+//создаем таблицу истории операций
 db.pool.query(`CREATE TABLE IF NOT EXISTS history_operations(
     id SERIAL PRIMARY KEY,
     shop_id INTEGER NOT NULL,
@@ -7,6 +9,7 @@ db.pool.query(`CREATE TABLE IF NOT EXISTS history_operations(
     action_id INTEGER NOT NULL,
     date DATE NOT NULL default NOW())`);
 
+    //создаем таблицу событий
 db.pool.query(`CREATE TABLE IF NOT EXISTS actions_product(
     id SERIAL PRIMARY KEY ,
     name VARCHAR(30) UNIQUE NOT NULL)`);
@@ -17,6 +20,7 @@ function getQuery(key, i) {
     
 module.exports = {
 
+    //добавляем тип события в БД
     async addAction(name) {
 
         const id = await new Promise((resolve, reject) => {
@@ -33,6 +37,7 @@ module.exports = {
         return {id: id};
     },
 
+    //получить id события по названию в БД
     async getAction(name) {
 
         const result = await new Promise((resolve, reject) => {
@@ -53,6 +58,7 @@ module.exports = {
         return {id: result.id};
     },
 
+    //добавляем операцию над продуктом в БД
     async addProductsOperation(dto) {
 
         dto.action_id = (await this.getAction(dto.name_action)).id;
@@ -71,6 +77,7 @@ module.exports = {
         return this.getProductsOperation(id);
     },
 
+    //получить операцию над продуктом по id
     async getProductsOperation(id) {
 
         const operation = await new Promise((resolve, reject) => {
@@ -87,6 +94,7 @@ module.exports = {
         return operation;
     },
 
+    //получить историю операций по фильтрам
     async getHistoryProducts(dto, page) {
 
         let query = '';
