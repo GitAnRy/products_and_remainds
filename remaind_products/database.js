@@ -11,6 +11,10 @@ db.pool.query(`CREATE TABLE IF NOT EXISTS remainds(
     shop_id INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
     type_remaind VARCHAR(10) NOT NULL)`);
+
+ function getQuery(key, i) {
+    return `${(i != 1)? " AND ":""}${key} = $${i}`;
+}
     
 module.exports = {
 
@@ -135,18 +139,35 @@ module.exports = {
         let i = 1;
         let arr = [];
 
-        for (let key in dto) {
-            let v = dto[key];
-            console.log('key = ' + key);
-            console.log('value = ' + v);
-            if (v) {
-                query = query + `${(i != 1)? " AND ":""}${key} = $${i}`;
-                arr.push(v);
-                i++;
-            }
-            
+        if (dto.plu)
+        {
+            query = query + getQuery('plu', i);
+            arr.push(dto.plu);
+            i++;
+        }
+    
+        if (dto.shop_id)
+        {
+            query = query + getQuery('shop_id', i);
+            arr.push(dto.shop_id);
+            i++;
+        }
+    
+        if (dto.type_remaind)
+        {
+            query = query + getQuery('type_remaind', i);
+            arr.push(dto.type_remaind);
+            i++;
+        }
+        
+        if (dto.quantity_up) {
+            query = query + `${(i != 1)? " AND":""} quantity < ${dto.quantity_up}`
         }
 
+        if (dto.quantity_down) {
+            query = query + `${(i != 1 || dto.quantity_up)? " AND":""} quantity > ${dto.quantity_down} `
+        }
+    
         console.log(query);
 
         const remainds = await new Promise((resolve, reject) => {
