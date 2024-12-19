@@ -1,5 +1,10 @@
 const data = require(`../../database`);
 
+/* createProduct - создать остаток
+    params:
+    plu - артикул товара
+    name - название товара*/
+
 module.exports = async (req, res) => {
 
     const {plu, name} = req.body;

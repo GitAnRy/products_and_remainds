@@ -1,3 +1,4 @@
+//реализуем логику подключения к БД
 require(`dotenv`).config();
 const Pool = require(`pg`).Pool;
 const pool = new Pool({

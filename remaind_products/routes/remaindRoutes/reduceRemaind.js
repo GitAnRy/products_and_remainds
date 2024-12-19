@@ -1,5 +1,10 @@
 const data = require(`../../database`);
 
+/* reduceRemaind - увеличить остаток
+    params:
+    id - id остатка в БД
+    quantity - убавляемое количество товара*/
+
 module.exports = async (req, res) => {
 
     const {id, quantity} = req.body;

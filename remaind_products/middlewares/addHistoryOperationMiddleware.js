@@ -1,8 +1,13 @@
+/* Используем функцию промежуточной обработки для реализации логики 
+взаимодействия с сервисом истории товаров. Общение сервисов происходит 
+посредством брокера сообщений. */
+
 const rabbitmqService = require(`../rabbitmqService`);
 const db = require(`../database`);
 
 module.exports = {
 
+    //оповещаем сервис истории о создании товара
     async createProduct(req, res, next) {
 
         const {plu, name} = req.body;
@@ -18,6 +23,7 @@ module.exports = {
         next();
     },
 
+    //оповещаем сервис истории о создании остатка
     async createRemaind(req, res, next) {
 
         const {plu, shop_id, quantity, type_remaind} = req.body;
@@ -33,6 +39,7 @@ module.exports = {
         next();
     },
 
+    //оповещаем сервис истории об увеличении остатка
     async addRemaindQuantity(req, res, next) {
 
         const {id, quantity} = req.body;
@@ -50,6 +57,7 @@ module.exports = {
         next();
     },
 
+    //оповещаем сервис истории об уменьшении остатка
     async reduceRemaindQuantity(req, res, next) {
 
         const {id, quantity} = req.body;

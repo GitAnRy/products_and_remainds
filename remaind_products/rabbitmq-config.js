@@ -1,3 +1,5 @@
+//реализуем логику подключения к брокеру сообщений
+
 const amqp = require(`amqplib/callback_api`);
 
 module.exports = () => { return new Promise((resolve, reject) => {

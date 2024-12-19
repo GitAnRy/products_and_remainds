@@ -1,5 +1,15 @@
 const data = require(`../../database`);
 
+/* getRemaind - получить остаток по фильтрам
+    params:
+    plu - артикул товара
+    shop_id - id магазина
+    type_remaind - тип остатка:
+        remaind - остаток на полке
+        order - остаток в заказе
+    quantity_up - верхняя граница для количества товара в остатке
+    quantity_down - нижняя граница для количества товара в остатке*/
+
 module.exports = async (req, res) => {
 
     const {plu, shop_id, type_remaind, quantity_up, quantity_down} = req.query;

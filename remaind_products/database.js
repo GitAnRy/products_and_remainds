@@ -1,10 +1,13 @@
 const db = require(`./data-config`);
+// логику взаимодействия с базой данных выносим в отдельный файл 
 
+//создаем таблицу продуктов
 db.pool.query(`CREATE TABLE IF NOT EXISTS products(
     id SERIAL PRIMARY KEY,
     plu INTEGER UNIQUE NOT NULL,
     name VARCHAR(30) NOT NULL)`);
 
+//создаем таблицу остатков
 db.pool.query(`CREATE TABLE IF NOT EXISTS remainds(
     id SERIAL PRIMARY KEY ,
     plu INTEGER NOT NULL, 
@@ -12,12 +15,14 @@ db.pool.query(`CREATE TABLE IF NOT EXISTS remainds(
     quantity INTEGER NOT NULL,
     type_remaind VARCHAR(10) NOT NULL)`);
 
- function getQuery(key, i) {
+//специальная функция для формирования запроса
+function getQuery(key, i) {
     return `${(i != 1)? " AND ":""}${key} = $${i}`;
 }
     
 module.exports = {
 
+    //добавляем продукт в БД
     async addProduct(product) {
 
         const id = await new Promise((resolve, reject) => {
@@ -34,6 +39,7 @@ module.exports = {
         return {id: id, ...product};
     },
 
+    //получить продукт по артикулу
     async getProductByPLU(plu) {
 
         const product = await new Promise((resolve, reject) => {
@@ -51,6 +57,7 @@ module.exports = {
         return product;
     },
 
+    //получить продукт по названию
     async getProductByName(name) {
 
         const product = await new Promise((resolve, reject) => {
@@ -68,6 +75,7 @@ module.exports = {
         return product;
     },
 
+    //добавить остаток
     async addRemaind(remaind) {
 
         const id = await new Promise((resolve, reject) => {
@@ -84,6 +92,7 @@ module.exports = {
         return {id: id, ...remaind};
     },
 
+    //увеличить количество товара в остатке
     async remaindQuantityAdd(dto) {
 
         const remaind = await new Promise((resolve, reject) => {
@@ -100,6 +109,7 @@ module.exports = {
         return this.getRemaindById(dto.id);
     },
 
+    //уменьшить количество товара в остатке
     async remaindQuantityReduce(dto) {
 
         const remaind = await new Promise((resolve, reject) => {
@@ -116,6 +126,7 @@ module.exports = {
         return this.getRemaindById(dto.id);
     },
 
+    //получить остаток по id
     async getRemaindById(id) {
 
         const remaind = await new Promise((resolve, reject) => {
@@ -133,6 +144,7 @@ module.exports = {
         return remaind;
     },
 
+    //запрос остатков в БД по фильтрам
     async getRemainds(dto) {
 
         let query = '';
